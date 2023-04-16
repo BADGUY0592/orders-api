@@ -24,7 +24,7 @@ class Order extends Model
      * Get the user for the order.
      */
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'customer_id');
     }
 
     /**
@@ -32,5 +32,26 @@ class Order extends Model
      */    
     public function items() {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Get the order's full status.
+     *
+     * @return string
+     */
+    public function getFullStatusAttribute()
+    {
+        $status = 'created';
+        switch ($this->status) {
+            case 2:
+                $status = 'created';
+                break;
+
+            case 3:
+                $status = 'failed';
+                break;
+        }
+
+        return $status;
     }
 }
